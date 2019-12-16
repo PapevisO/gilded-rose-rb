@@ -85,12 +85,12 @@ class TestUntitled < Test::Unit::TestCase
     assert_equal items[0].sell_in, -1
     assert_equal items[1].quality, 49
     assert_equal items[1].sell_in, 1
-    GildedRose.new(items).update_quality()
+    GildedRose.new(items).update_quality_draft
     assert_equal items[0].quality, 52
     assert_equal items[0].sell_in, -2
     assert_equal items[1].quality, 50
     assert_equal items[1].sell_in, 0
-    GildedRose.new(items).update_quality()
+    GildedRose.new(items).update_quality_draft
     assert_equal items[1].quality, 50
     assert_equal items[1].sell_in, -1
   end
@@ -99,7 +99,7 @@ class TestUntitled < Test::Unit::TestCase
     items = [Item.new(c_name, 0, 10),
              Item.new(c_name, -1, 51),
              Item.new(c_name, 1, 49)]
-    GildedRose.new(items).update_quality()
+    GildedRose.new(items).update_quality_draft
     assert_equal items[0].to_s, c_name + ", 0, 10"
     assert_equal items[1].to_s, c_name +  ", -1, 51"
     assert_equal items[2].to_s, c_name +  ", 1, 49"

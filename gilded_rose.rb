@@ -37,19 +37,23 @@ class GildedRose
     end
     item.sell_in -= 1 unless Array(category[:expirable]).count.zero?
     Array(category[:expirable]).each do |expirable|
-      if expirable[:type] === :sustain
-        if item.quality > expirable.fetch(:setpoint, 0) and item.sell_in < 0
+      if item.sell_in < 0
+        if expirable[:type] === :sustain
+          if item.quality < expirable.fetch(:setpoint, 50)
+            item.quality -= expirable.fetch(:rate, 1)
+          end
+        elsif expirable[:type] === :avalance
+          if item.quality > expirable.fetch(:setpoint, 0)
+            item.quality = 0
+            return
+          end
+        elsif expirable[:type] === :gradual
+          if item.quality > expirable.fetch(:setpoint, 0)
+            item.quality -= expirable.fetch(:rate, 1)
+          end
+        else
           item.quality -= expirable.fetch(:rate, 1)
         end
-      elsif expirable[:type] === :avalance
-        if item.quality > expirable.fetch(:setpoint, 0) and item.sell_in < 0
-          item.quality = 0
-          return
-        end
-      elsif expirable[:type] === :gradual
-        item.quality -= expirable.fetch(:rate, 1)
-      else
-        item.quality -= expirable.fetch(:rate, 1)
       end
     end
   end
@@ -71,18 +75,20 @@ class GildedRose
         expirable: [
             {type: :sustain, setpoint: 50},
         ]},
+      stable: {},
       default: {
         upgradeable: [
             {type: :sustain, setpoint: 0, rate: -1}
         ],
         expirable: [
-            {type: :sustain, setpoint: 0}
+            {type: :gradual, setpoint: 0}
         ]}
     }
 
     @item_categories = {
         'Aged Brie' => @kinds[:expirable_sustain_upgradable_sustain],
         'Backstage passes to a TAFKAL80ETC concert' => @kinds[:expirable_avalance_excitable_sustain_upgradable],
+        'Sulfuras, Hand of Ragnaros' => @kinds[:stable],
         '' => @kinds[:default],
         :default => @kinds[:default]
     }
