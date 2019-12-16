@@ -52,7 +52,9 @@ class TestUntitled < Test::Unit::TestCase
   end
   # test  expirable gradual  degradable
   def test_expgrad_degrad
-    items = [Item.new('Helium balloon', 0, 52),Item.new('Helium balloon', 2, 48)]
+    items = [Item.new('Helium balloon', 0, 52),
+             Item.new('Helium balloon', 2, 48)]
+             Item.new('Helium balloon', 2, 48)]
     GildedRose.new(items).update_quality
     assert_equal items[0].quality, 50
     assert_equal items[0].sell_in, -1

@@ -2,6 +2,7 @@ class GildedRose
   PARAM_TYPES = { sustain: 100, avalance: 200, gradual: 300, default: 400 }.freeze
 
   def item_process_by_cat(item, category)
+
     Array(category[:upgradeable]).each do |upgradeable|
       if upgradeable[:type] === :sustain
         if upgradeable.fetch(:rate, 1) < 0
@@ -17,6 +18,7 @@ class GildedRose
         item.quality += upgradeable.fetch(:rate, 1)
       end
     end
+
     Array(category[:excitable]).each do |excitable|
       next unless ( excitable[:sell_in_is_greater_than].nil? || item.sell_in > excitable[:sell_in_is_greater_than] )
       next unless ( excitable[:sell_in_is_less_than].nil? || item.sell_in < excitable[:sell_in_is_less_than] )
@@ -28,7 +30,9 @@ class GildedRose
         item.quality += excitable.fetch(:rate, 1)
       end
     end
+
     item.sell_in -= 1 unless Array(category[:expirable]).count.zero?
+
     Array(category[:expirable]).each do |expirable|
       if item.sell_in < 0
         if expirable[:type] === :sustain
