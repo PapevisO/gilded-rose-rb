@@ -18,15 +18,8 @@ class GildedRose
       end
     end
     Array(category[:excitable]).each do |excitable|
-      next if (
-        (!excitable[:sell_in_is_greater_than].nil?) &&
-        (item.sell_in <= excitable[:sell_in_is_greater_than])
-      )
-      next if (
-        (!excitable[:sell_in_is_less_than].nil?) &&
-        (item.sell_in >= excitable[:sell_in_is_less_than])
-      )
-
+      next unless ( excitable[:sell_in_is_greater_than].nil? || item.sell_in > excitable[:sell_in_is_greater_than] )
+      next unless ( excitable[:sell_in_is_less_than].nil? || item.sell_in < excitable[:sell_in_is_less_than] )
       if excitable[:type] === :sustain
         if item.quality < excitable.fetch(:setpoint, 50)
           item.quality += excitable.fetch(:rate, 1)
@@ -84,7 +77,6 @@ class GildedRose
             {type: :gradual, setpoint: 0}
         ]}
     }
-
     @item_categories = {
         'Aged Brie' => @kinds[:expirable_sustain_upgradable_sustain],
         'Backstage passes to a TAFKAL80ETC concert' => @kinds[:expirable_avalance_excitable_sustain_upgradable],
@@ -92,59 +84,10 @@ class GildedRose
         '' => @kinds[:default],
         :default => @kinds[:default]
     }
-
     @items = items
   end
 
   def update_quality
-    @items.each do |item|
-      if item.name != 'Aged Brie' and item.name != 'Backstage passes to a TAFKAL80ETC concert'
-        if item.quality > 0
-          if item.name != 'Sulfuras, Hand of Ragnaros'
-            item.quality = item.quality - 1
-          end
-        end
-      else
-        if item.quality < 50
-          item.quality = item.quality + 1
-          if item.name == 'Backstage passes to a TAFKAL80ETC concert'
-            if item.sell_in < 11
-              if item.quality < 50
-                item.quality = item.quality + 1
-              end
-            end
-            if item.sell_in < 6
-              if item.quality < 50
-                item.quality = item.quality + 1
-              end
-            end
-          end
-        end
-      end
-      if item.name != 'Sulfuras, Hand of Ragnaros'
-        item.sell_in = item.sell_in - 1
-      end
-      if item.sell_in < 0
-        if item.name != 'Aged Brie'
-          if item.name != 'Backstage passes to a TAFKAL80ETC concert'
-            if item.quality > 0
-              if item.name != 'Sulfuras, Hand of Ragnaros'
-                item.quality = item.quality - 1
-              end
-            end
-          else
-            item.quality = item.quality - item.quality
-          end
-        else
-          if item.quality < 50
-            item.quality = item.quality + 1
-          end
-        end
-      end
-    end
-  end
-
-  def update_quality_draft
     @items.each do |item|
       item_process_by_cat(item, @item_categories.fetch(item.name, @kinds[:default]))
     end
