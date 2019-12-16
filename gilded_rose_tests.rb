@@ -93,11 +93,13 @@ class TestUntitled < Test::Unit::TestCase
   end
   def test_expirable_avalance
     c_name = 'Sulfuras, Hand of Ragnaros'
-    items = [Item.new(c_name, 0, 10)]
+    items = [Item.new(c_name, 0, 10),
+             Item.new(c_name, -1, 51),
+             Item.new(c_name, 1, 49)]
     GildedRose.new(items).update_quality()
-    assert_equal items[0].to_s, c_name + ", 12, 21"
-    assert_equal items[1].to_s, c_name +  ", 7, 22"
-    assert_equal items[2].to_s, c_name +  ", 4, 23"
+    assert_equal items[0].to_s, c_name + ", 0, 10"
+    assert_equal items[1].to_s, c_name +  ", -1, 51"
+    assert_equal items[2].to_s, c_name +  ", 1, 49"
   end
 
 end
