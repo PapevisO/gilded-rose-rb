@@ -5,6 +5,11 @@ class TestUntitled < Test::Unit::TestCase
   def test_foo
     items = [Item.new('foo', 0, 0)]
     GildedRose.new(items).update_quality()
-    assert_equal items[0].name, 'fixme'
+    assert_equal items[0].name, 'foo'
+  end
+  def test_avalance_expirable
+    items = [Item.new('B', 0, 10)]
+    GildedRose.new(items).update_quality()
+    assert_equal items[0].quality, 0
   end
 end
