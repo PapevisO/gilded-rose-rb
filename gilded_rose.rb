@@ -1,4 +1,19 @@
 class GildedRose
+  @kinds = {
+      expirable_avalance: {
+          expirable: [
+              {type: :avalance}
+          ],
+          excitable: [
+              {type: :sustain, less_than: 11, setpoint: 50},
+              {type: :sustain, less_than: 5, setpoint: 50}
+          ],
+          upgradeable: [
+              {type: :sustain, setpoint: 50}
+          ]
+      }
+  }
+
   def initialize(items)
     @items = items
   end
